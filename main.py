@@ -14,7 +14,7 @@ vk_session = vk_api.VkApi(token=token)  # Обработка access_token
 longpoll = VkLongPoll(vk_session)  # Данные для работы в сообществе
 vk = vk_session.get_api()  # For api requests
 a = 0
-track = ""
+
 
 
 def send_audio(file=None, title=None):
@@ -59,6 +59,7 @@ while True:
                             track = f"{audio[0]['artist']} - {audio[0]['title']}"
                             urllib.request.urlretrieve(audio_url, "аудио.mp3")
                             attachs += f"\n<a href='{audio_url}'>[МУЗЯКА]</a>"
+                            send_audio("аудио.mp3", track)
                         if i["type"] == "doc":
                             doc_url = i["doc"]["url"]
                             attachs += f"\n<a href='{doc_url}'>[ДОКУМЕНТ]</a>"
@@ -70,9 +71,6 @@ while True:
                 bot.send_message(500550780, msg, parse_mode="HTML")
                 if a == 1:
                     send_audio("гс.mp3")
-                    a = 0
-                elif a == 2:
-                    send_audio("аудио.mp3", track)
                     a = 0
     except Exception:
         print(traceback.format_exc())
