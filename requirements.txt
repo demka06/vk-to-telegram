@@ -1,0 +1,5 @@
+vk-api
+pytz
+urllib
+pyTelegramBotAPI
+os
