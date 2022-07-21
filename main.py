@@ -38,20 +38,20 @@ while True:
                         if i['type'] == "photo":
                             pick = i["photo"]['sizes'][len(i["photo"]['sizes']) - 1]['url']
                             attachs += f"\n<a href='{pick}'>[ПИКЧА]</a>"
-                        if i['type'] == "video":
+                        elif i['type'] == "video":
                             vid, us = i["video"]["id"], i["video"]["owner_id"]
                             video = vk.video.get(owner_id=us, videos=str(us) + "_" + str(vid))['items'][0]['player']
                             attachs += f"\n<a href='{video}'>[ВИДЕО]</a>"
-                        if i["type"] == "sticker":
+                        elif i["type"] == "sticker":
                             stick = i["sticker"]['images'][len(i["sticker"]['images']) - 1]['url']
                             print(stick)
                             attachs += f"\n<a href='{stick}'>[СТИК]</a>"
-                        if i["type"] == "audio_message":
+                        elif i["type"] == "audio_message":
                             a = 1
                             msg_url = i["audio_message"]["link_mp3"]
                             urllib.request.urlretrieve(msg_url, "гс.mp3")
                             attachs += f"\n<a href='{msg_url}'>[ГС]</a>"
-                        if i["type"] == "audio":
+                        elif i["type"] == "audio":
                             a = 2
                             audio_id = f'{i["audio"]["owner_id"]}_{i["audio"]["id"]}'
                             audio = vk.audio.getById(audios=audio_id)
@@ -60,9 +60,30 @@ while True:
                             urllib.request.urlretrieve(audio_url, "аудио.mp3")
                             attachs += f"\n<a href='{audio_url}'>[МУЗЯКА]</a>"
                             send_audio("аудио.mp3", track)
-                        if i["type"] == "doc":
+                        elif i["type"] == "doc":
                             doc_url = i["doc"]["url"]
                             attachs += f"\n<a href='{doc_url}'>[ДОКУМЕНТ]</a>"
+                        elif i["type"] == "wall":
+                            text = i['wall']["text"]
+                            post_link = f"vk.com/{i['wall']['from_id']}_{i['wall']['id']}"
+                            picks = ""
+                            if "attachments" in i["wall"]:
+                                for n in i["wall"]["attachments"]:
+                                    print(n)
+                                    if n["type"]=="photo":
+                                        pick = n['photo']["sizes"][len(n['photo']["sizes"])-1]["url"]
+                                        picks+=f"\n<a href='{pick}'>[ПИКЧА]</a>"
+                                    elif n["type"]=="doc":
+                                        doc = i["doc"]["url"]
+                                        picks += f"\n<a href='{doc}'>[ПИКЧА]</a>"
+                                    elif n["type"] == "video":
+                                        vids, uss = n["video"]["id"], n["video"]["owner_id"]
+                                        videos = vk.video.get(owner_id=uss, videos=str(uss) + "_" + str(vids))['items'][0][
+                                            'player']
+                                        picks += f"\n<a href='{videos}'>[ВИДЕО]</a>"
+
+                            attachs += f"\n<a href='{post_link}'>[ПОСТ]</a>\n    {text}\n    {picks}"
+
 
                 msg = f"""[{str(time).split(".")[0]}]
 Отправитель: <a href="vk.com/id{event.user_id}">{name['first_name']} {name['last_name']}</a>
